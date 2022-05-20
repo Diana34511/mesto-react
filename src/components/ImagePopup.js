@@ -2,7 +2,6 @@ import React from "react";
 import "../index.css";
 
 function ImagePopup({ card, onClose }) {
-  console.log(card);
   return (
     <div
       className={`
