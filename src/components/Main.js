@@ -4,6 +4,7 @@ import { api } from "../utils/Api";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import Card from "./Card";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Main({
   onEditProfile,
@@ -16,23 +17,11 @@ function Main({
   onCardClick,
   selectedCard,
 }) {
-  const [userName, setUserName] = useState("");
-  const [userDescription, setUserDescription] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
   const [cards, setCards] = useState([]);
 
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => {
-        setUserName(data.name);
-        setUserAvatar(data.avatar);
-        setUserDescription(data.about);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const currentUser = React.useContext(CurrentUserContext);
 
+  React.useEffect(() => {
     api.getAllCards().then((cardsData) => {
       setCards(cardsData).catch((err) => {
         console.log(err);
@@ -40,19 +29,39 @@ function Main({
     });
   }, []);
 
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
+      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+    });
+  }
+
+  function handleCardDelete(card) {
+    api
+      .deleteCard(card._id)
+      .then((res) => {
+        setCards(cards.filter((item) => item._id !== card._id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <main>
       <section className="profile">
         <div className="profile__avatar hover-animation" onClick={onEditAvatar}>
-          <img
-            style={{ backgroundImage: `url(${userAvatar})` }}
+          <div
+            style={{ backgroundImage: `url(${currentUser.avatar})` }}
             className="profile__avatar-image"
-            alt=""
           />
         </div>
         <div className="profile__info">
-          <h1 className="profile__title">{userName}</h1>
-          <p className="profile__subtitle">{userDescription}</p>
+          <h1 className="profile__title">{currentUser.name}</h1>
+          <p className="profile__subtitle">{currentUser.about}</p>
           <button
             className="profile__edit-button hover-animation"
             onClick={onEditProfile}
@@ -68,7 +77,13 @@ function Main({
       <section className="cards">
         {!!cards.length &&
           cards.map((card) => (
-            <Card key={card._id} card={card} onCardClick={onCardClick} />
+            <Card
+              key={card._id}
+              card={card}
+              onCardClick={onCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
           ))}
       </section>
 
