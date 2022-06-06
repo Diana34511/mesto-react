@@ -1,7 +1,15 @@
 import React from "react";
 import "../index.css";
 
-function PopupWithForm({ children, name, isOpen, title, onClose, buttonName }) {
+function PopupWithForm({
+  children,
+  name,
+  isOpen,
+  title,
+  onClose,
+  buttonName,
+  onSubmit,
+}) {
   return (
     <div
       className={`
@@ -10,7 +18,12 @@ function PopupWithForm({ children, name, isOpen, title, onClose, buttonName }) {
       <div className="popup__content">
         <button className="popup__close-button" onClick={onClose}></button>
         <h2 className="popup__title">{title}</h2>
-        <form className="popup__form" name={name} noValidate>
+        <form
+          className="popup__form"
+          name={name}
+          onSubmit={onSubmit}
+          noValidate
+        >
           <ul className="popup__elements">
             {children}
             <li className="popup__element">

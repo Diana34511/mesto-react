@@ -29,12 +29,12 @@ class Api {
     });
   }
 
-  updateUserInfo({ name, job }) {
+  updateUserInfo({ name, about }) {
     return this._fetch(`${this._url}users/me`, {
       method: "PATCH",
       body: JSON.stringify({
         name,
-        about: job,
+        about: about,
       }),
     });
   }
@@ -62,7 +62,7 @@ class Api {
   // }
 
   changeLikeCardStatus(id, isLiked) {
-    if (isLiked) {
+    if (!isLiked) {
       return this._fetch(`${this._url}cards/${id}/likes`, {
         method: "PUT",
       });

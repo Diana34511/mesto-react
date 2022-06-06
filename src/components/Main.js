@@ -1,22 +1,10 @@
 import React, { useState } from "react";
 import "../index.css";
 import { api } from "../utils/Api";
-import PopupWithForm from "./PopupWithForm";
-import ImagePopup from "./ImagePopup";
 import Card from "./Card";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-function Main({
-  onEditProfile,
-  onAddPlace,
-  onEditAvatar,
-  isEditProfilePopupOpen,
-  isAddPlacePopupOpen,
-  isEditAvatarPopupOpen,
-  closeAllPopups,
-  onCardClick,
-  selectedCard,
-}) {
+function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
   const [cards, setCards] = useState([]);
 
   const currentUser = React.useContext(CurrentUserContext);
@@ -30,10 +18,8 @@ function Main({
   }, []);
 
   function handleCardLike(card) {
-    // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    // Отправляем запрос в API и получаем обновлённые данные карточки
     api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     });
@@ -86,109 +72,6 @@ function Main({
             />
           ))}
       </section>
-
-      <PopupWithForm
-        title="Редактировать профиль"
-        name="profile-popup"
-        isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
-        buttonName="Сохранить"
-      >
-        <li className="popup__element">
-          <input
-            name="nameInput"
-            id="name-input"
-            value=""
-            type="text"
-            className="popup__textarea"
-            placeholder="Введите имя"
-            required
-            minlength="2"
-            maxlength="40"
-          />
-          <span className="name-input-error popup__textarea-error"></span>
-        </li>
-        <li className="popup__element">
-          <input
-            name="jobInput"
-            id="job-input"
-            value=""
-            className="popup__textarea"
-            placeholder="Введите описание"
-            required
-            minlength="2"
-            maxlength="200"
-          />
-          <span className="job-input-error popup__textarea-error"></span>
-        </li>
-      </PopupWithForm>
-
-      <PopupWithForm
-        name="new-card-popup"
-        title="Новое место"
-        isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
-        buttonName="Создать"
-      >
-        <li className="popup__element">
-          <input
-            name="placeName"
-            id="place-name-input"
-            value=""
-            type="text"
-            className="popup__textarea"
-            placeholder="Название"
-            minlength="2"
-            maxlength="30"
-            required
-          />
-          <span className="place-name-input-error popup__textarea-error"></span>
-        </li>
-        <li className="popup__element">
-          <input
-            name="placeLink"
-            id="place-link-input"
-            type="url"
-            value=""
-            className="popup__textarea"
-            placeholder="Введите ссылку"
-            required
-          />
-          <span className="place-link-input-error popup__textarea-error"></span>
-        </li>
-      </PopupWithForm>
-
-      <PopupWithForm
-        name="alert-popup"
-        title="Вы уверены?"
-        onClose={closeAllPopups}
-        buttonName="Да"
-      />
-
-      <PopupWithForm
-        name="avatar-popup"
-        title="Обновить аватар"
-        isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
-        buttonName="Сохранить"
-      >
-        <li className="popup__element popup__avatar-link">
-          <input
-            name="avatar"
-            id="avatar-input"
-            value=""
-            type="url"
-            className="popup__textarea"
-            placeholder="Введите ссылку на аватар"
-            required
-          />
-          <span className="avatar-input-error popup__textarea-error"></span>
-        </li>
-      </PopupWithForm>
-
-      {selectedCard && (
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-      )}
     </main>
   );
 }
