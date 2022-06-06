@@ -49,18 +49,6 @@ class Api {
     });
   }
 
-  // addLike(id) {
-  //   return this._fetch(`${this._url}cards/${id}/likes`, {
-  //     method: "PUT",
-  //   });
-  // }
-
-  // deleteLike(id) {
-  //   return this._fetch(`${this._url}cards/${id}/likes`, {
-  //     method: "DELETE",
-  //   });
-  // }
-
   changeLikeCardStatus(id, isLiked) {
     if (!isLiked) {
       return this._fetch(`${this._url}cards/${id}/likes`, {
