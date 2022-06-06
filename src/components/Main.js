@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import "../index.css";
-import { api } from "../utils/Api";
+
 import Card from "./Card";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 

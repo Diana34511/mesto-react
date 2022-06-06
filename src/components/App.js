@@ -50,9 +50,16 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    api
+      .changeLikeCardStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((c) => (c._id === card._id ? newCard : c))
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function handleCardDelete(card) {
@@ -97,12 +104,11 @@ function App() {
           about: data.about,
           _id: data._id,
         });
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       });
-
-    closeAllPopups();
   }
 
   function handleUpdateAvatar(link) {
@@ -115,12 +121,11 @@ function App() {
           about: data.about,
           _id: data._id,
         });
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       });
-
-    closeAllPopups();
   }
 
   function handleAddPlaceSubmit({ name, link }) {
@@ -128,13 +133,11 @@ function App() {
       .createNewCard({ name, link })
       .then((card) => {
         setCards([card, ...cards]);
-        console.log(card);
+        closeAllPopups();
       })
       .catch((err) => {
         console.log(err);
       });
-
-    closeAllPopups();
   }
 
   return (
@@ -145,12 +148,7 @@ function App() {
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onEditProfile={handleEditProfileClick}
-          isEditProfilePopupOpen={isEditProfilePopupOpen}
-          isAddPlacePopupOpen={isAddPlacePopupOpen}
-          isEditAvatarPopupOpen={isEditAvatarPopupOpen}
-          closeAllPopups={closeAllPopups}
           onCardClick={handleCardClick}
-          selectedCard={selectedCard}
           cards={cards}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
@@ -181,9 +179,7 @@ function App() {
           onUpdateAvatar={handleUpdateAvatar}
         />
 
-        {selectedCard && (
-          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-        )}
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
       </CurrentUserContext.Provider>
     </body>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import "../index.css";
+
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup({ onAddPlace, onClose, isOpen }) {
