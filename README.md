@@ -10,6 +10,8 @@ Implemented asynchronous requests to the server.
 
 -**Screenshots:**
 
+![screenshots](https://github.com/Diana34511/mesto-react/blob/main/src/images/screenshot.png)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
